@@ -7,7 +7,8 @@ module.exports = {
   env: {
     test: {
       plugins: [
-        [ require.resolve('babel-plugin-istanbul'), { exclude: ['**/*_test.js']} ]
+        // TODO: This currently breaks the coverage
+        // [ require.resolve('babel-plugin-istanbul'), { exclude: ['test/**/*']} ]
       ]
     }
   }
