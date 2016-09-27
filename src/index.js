@@ -3,6 +3,7 @@
 const CleanPlugin = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const webpack = require('webpack');
 
 const CWD = process.cwd();
@@ -19,12 +20,10 @@ const config = {
   },
   output: {
     path: BUILD,
-    filename: '[name].js'
+    filename: '[name].bundle.js',
+    chunkFilename: '[id].chunk.js'
   },
-  plugins: [
-    // Copy all files except JS files, since they will be Babel-compiled to the output directory
-    new CopyPlugin([{ from: `${SRC}/**/*` }], { ignore: '*.js*' })
-  ],
+  plugins: [],
   resolve: {
     fallback: [PROJECT_MODULES, BASE_MODULES],
     extensions: ['', '.js', '.json', '.jsx']
@@ -34,11 +33,11 @@ const config = {
   },
   eslint: {
     configFile: path.join(__dirname, 'eslint.js'),
-    quiet: false,
-    emitWarning: true,
+    quiet: true,
+    emitWarning: false,
     emitError: true,
     failOnWarning: false,
-    failOnError: true,
+    failOnError: true
   },
   module: {
     preLoaders: [
@@ -77,9 +76,17 @@ const config = {
 
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'eval';
-  config.eslint.quiet = true;
-  config.eslint.emitWarning = false;
+  config.eslint.quiet = false;
+  config.eslint.emitWarning = true;
 } else {
+  // Copy all files except JS files, since they will be Babel-compiled to the output directory.
+  // This only needs to be done in production since in development assets should be served from the
+  // webpack-development-server via the source directory.
+  config.plugins.push(new CopyPlugin([{
+    context: SRC,
+    from: `**/*` }
+  ], { ignore: ['*.js*'] }));
+  config.plugins.push(new ProgressBarPlugin());
   config.plugins.push(new CleanPlugin([BUILD], { root: CWD }))
 }
 
