@@ -63,7 +63,7 @@ const eslint = {
     'guard-for-in': 'error',
 
     // disallow the use of alert, confirm, and prompt
-    'no-alert': 'warn',
+    'no-alert': 'error',
 
     // disallow use of arguments.caller or arguments.callee
     'no-caller': 'error',
@@ -277,10 +277,10 @@ const eslint = {
     'no-cond-assign': ['error', 'always'],
 
     // disallow use of console
-    'no-console': 'warn',
+    'no-console': 'error',
 
     // disallow use of constant expressions in conditions
-    'no-constant-condition': 'warn',
+    'no-constant-condition': 'error',
 
     // disallow control characters in regular expressions
     'no-control-regex': 'error',
@@ -553,7 +553,7 @@ const eslint = {
     'func-call-spacing': ['error', 'never'],
 
     // require function expressions to have a name
-    'func-names': 'warn',
+    'func-names': 'error',
 
     // enforces use of function declarations or expressions
     // http://eslint.org/docs/rules/func-style
@@ -879,7 +879,7 @@ const eslint = {
     'no-undefined': 'off',
 
     // disallow declaration of variables that are not used in the code
-    'no-unused-vars': ['warn', { vars: 'local', args: 'after-used' }],
+    'no-unused-vars': ['error', { vars: 'local', args: 'after-used' }],
 
     // disallow use of variables before they are defined
     'no-use-before-define': 'error',
@@ -906,7 +906,7 @@ const eslint = {
     'babel/arrow-parens': ['error', 'as-needed'],
 
     // guard against awaiting async functions inside of a loop
-    'babel/no-await-in-loop': 'warn',
+    'babel/no-await-in-loop': 'error',
 
     // forbid trailing commas for function parameter lists. Behaves like, and takes the same options
     // as comma-dangle

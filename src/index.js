@@ -33,10 +33,7 @@ const config = {
   },
   eslint: {
     configFile: path.join(__dirname, 'eslint.js'),
-    quiet: true,
-    emitWarning: false,
     emitError: true,
-    failOnWarning: false,
     failOnError: true
   },
   module: {
@@ -76,16 +73,17 @@ const config = {
 
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'eval';
-  config.eslint.quiet = false;
-  config.eslint.emitWarning = true;
+  config.eslint.failOnError = false;
+  config.eslint.emitWarning = false;
+  config.eslint.emitError = false;
 } else {
   // Copy all files except JS files, since they will be Babel-compiled to the output directory.
   // This only needs to be done in production since in development assets should be served from the
   // webpack-development-server via the source directory.
   config.plugins.push(new CopyPlugin([{
     context: SRC,
-    from: `**/*` }
-  ], { ignore: ['*.js*'] }));
+    from: `**/*`
+  }], { ignore: ['*.js*'] }));
   config.plugins.push(new ProgressBarPlugin());
   config.plugins.push(new CleanPlugin([BUILD], { root: CWD }))
 }
