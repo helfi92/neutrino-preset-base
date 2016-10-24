@@ -57,7 +57,7 @@ const config = {
             test: {
               plugins: [
                 // FIXME: This currently breaks the coverage
-                // [ require.resolve('babel-plugin-istanbul'), { exclude: ['test/**/*']} ]
+                //[require.resolve('babel-plugin-istanbul'), { exclude: ['test/**/*'] }]
               ]
             }
           }
