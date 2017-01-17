@@ -21,71 +21,66 @@ const config = {
   output: {
     path: BUILD,
     filename: '[name].bundle.js',
-    chunkFilename: '[id].chunk.js'
+    chunkFilename: '[id].[chunkhash].js'
   },
   plugins: [],
   resolve: {
-    fallback: [PROJECT_MODULES, BASE_MODULES],
-    extensions: ['', '.js', '.json', '.jsx']
-  },
-  resolveLoader: {
-    fallback: [PROJECT_MODULES, BASE_MODULES]
-  },
-  eslint: {
-    configFile: path.join(__dirname, 'eslint.js'),
-    emitError: true,
-    failOnError: true
+    modules: [PROJECT_MODULES, BASE_MODULES],
+    extensions: ['.js', '.json', '.jsx']
   },
   module: {
-    preLoaders: [
+    rules: [
       {
         test: /\.js$/,
         include: [SRC],
-        loader: require.resolve('eslint-loader')
-      }
-    ],
-    loaders: [
+        enforce: 'pre',
+        use: require.resolve('eslint-loader')
+      },
       {
         test: /\.js$/,
         include: [SRC, TEST],
-        loader: require.resolve('babel-loader'),
-        query: {
-          presets: [
-            require.resolve('babel-preset-es2015')
-          ],
-          env: {
-            test: {
-              plugins: [
-                // FIXME: This currently breaks the coverage
-                //[require.resolve('babel-plugin-istanbul'), { exclude: ['test/**/*'] }]
-              ]
+        use: {
+          loader: require.resolve('babel-loader'),
+          options: {
+            presets: [
+              [require.resolve('babel-preset-es2015'), { 'modules': false }]
+            ],
+            plugins: [],
+            env: {
+              test: {
+                plugins: [
+                  // FIXME: This currently breaks the coverage
+                  //[require.resolve('babel-plugin-istanbul'), { exclude: ['test/**/*'] }]
+                ]
+              }
             }
           }
         }
-      },
-      {
-        test: /\.json$/,
-        loader: require.resolve('json-loader')
       }
     ]
   }
 };
 
+let eslint = { configFile: path.join(__dirname, 'eslint.js'), emitError: true, failOnError: true };
+
+config.plugins.push(new webpack.LoaderOptionsPlugin({ options: { eslint }}));
+
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'eval';
-  config.eslint.failOnError = false;
-  config.eslint.emitWarning = false;
-  config.eslint.emitError = false;
+  eslint.failOnError = false;
+  eslint.emitWarning = false;
+  eslint.emitError = false;
 } else {
   // Copy all files except JS files, since they will be Babel-compiled to the output directory.
   // This only needs to be done in production since in development assets should be served from the
   // webpack-development-server via the source directory.
-  config.plugins.push(new CopyPlugin([{
-    context: SRC,
-    from: `**/*`
-  }], { ignore: ['*.js*'] }));
-  config.plugins.push(new ProgressBarPlugin());
-  config.plugins.push(new CleanPlugin([BUILD], { root: CWD }))
+  config.plugins.push(
+    new CopyPlugin([{ context: SRC, from: `**/*` }], { ignore: ['*.js*'] }),
+    new ProgressBarPlugin(),
+    new CleanPlugin([BUILD], { root: CWD })
+  );
+
+  config.output.filename = '[name].[chunkhash].bundle.js';
 }
 
 module.exports = config;
