@@ -63,8 +63,6 @@ const config = {
 
 let eslint = { configFile: path.join(__dirname, 'eslint.js'), emitError: true, failOnError: true };
 
-config.plugins.push(new webpack.LoaderOptionsPlugin({ options: { eslint }}));
-
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'eval';
   eslint.failOnError = false;
@@ -82,5 +80,7 @@ if (process.env.NODE_ENV === 'development') {
 
   config.output.filename = '[name].[chunkhash].bundle.js';
 }
+
+config.plugins.push(new webpack.LoaderOptionsPlugin({ options: { eslint }}));
 
 module.exports = config;
