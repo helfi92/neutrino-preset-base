@@ -383,7 +383,7 @@ const eslint = {
     // http://eslint.org/docs/rules/arrow-body-style
     // TODO: enable requireReturnForObjectLiteral?
     'arrow-body-style': ['error', 'as-needed', {
-      requireReturnForObjectLiteral: true,
+      requireReturnForObjectLiteral: false,
     }],
 
     // handled by babel rules
