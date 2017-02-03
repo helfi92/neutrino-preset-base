@@ -26,7 +26,7 @@ const config = {
   plugins: [],
   resolve: {
     modules: [PROJECT_MODULES, BASE_MODULES],
-    extensions: ['.js', '.json', '.jsx']
+    extensions: ['.js', '.json']
   },
   module: {
     rules: [
@@ -43,7 +43,7 @@ const config = {
           loader: require.resolve('babel-loader'),
           options: {
             presets: [
-              [require.resolve('babel-preset-es2015'), { 'modules': false }]
+              [require.resolve('babel-preset-es2015'), { modules: false }]
             ],
             plugins: [],
             env: {
@@ -61,7 +61,7 @@ const config = {
   }
 };
 
-let eslint = { configFile: path.join(__dirname, 'eslint.js'), emitError: true, failOnError: true };
+const eslint = { configFile: path.join(__dirname, 'eslint.js'), emitError: true, failOnError: true };
 
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'eval';
